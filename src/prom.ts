@@ -1,4 +1,10 @@
-import { Counter, Summary, register, collectDefaultMetrics } from 'prom-client'
+import {
+  Counter,
+  Summary,
+  register,
+  collectDefaultMetrics,
+  Histogram
+} from 'prom-client'
 
 export const createHttpRequestCounter = () => {
   return new Counter({
@@ -8,7 +14,16 @@ export const createHttpRequestCounter = () => {
   })
 }
 
-export const createRequestDuration = () => {
+export const createRequestDuration = (useHistogram: boolean) => {
+  if (useHistogram) {
+    return new Histogram({
+      name: `http_request_duration_ms`,
+      help: 'Duration of HTTP requests in ms',
+      labelNames: ['route', 'method', 'status', 'normalizedStatus'],
+      buckets: [5, 10, 25, 50, 100, 250, 500, 1000]
+    })
+  }
+
   return new Summary({
     name: `http_request_duration_ms`,
     help: 'Duration of HTTP requests in ms',

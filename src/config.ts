@@ -9,8 +9,8 @@ export interface Config {
   metricsPath?: string
   collectDefaultMetrics?: boolean
   defaultLabels?: Record<string, string>
-  routeNormalizer?: RouteNormalizer
   statusNormalizer?: StatusNormalizer
+  requestDurationUseHistogram?: boolean
 }
 
 export const defaultStatusNormalizer: StatusNormalizer = ctx => {
@@ -34,7 +34,8 @@ export const defaultStatusNormalizer: StatusNormalizer = ctx => {
 export const defaultConfig: Config = {
   metricsPath: '/metrics',
   collectDefaultMetrics: true,
-  statusNormalizer: defaultStatusNormalizer
+  statusNormalizer: defaultStatusNormalizer,
+  requestDurationUseHistogram: true
 }
 
 export const mergeDefault = (c?: Config): Config => {

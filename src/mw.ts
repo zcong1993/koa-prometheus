@@ -9,7 +9,9 @@ export const promMw = (c: Config) => {
   }
 
   const requestCounter = createHttpRequestCounter()
-  const requestDurationSummary = createRequestDuration()
+  const requestDurationSummary = createRequestDuration(
+    c.requestDurationUseHistogram
+  )
 
   return async (ctx: any, next: any) => {
     if (ctx.path === c.metricsPath) {
