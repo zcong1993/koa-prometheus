@@ -3,7 +3,7 @@ import { Config, mergeDefault } from './config'
 import { promMw } from './mw'
 import { createMetricsHandler, setupDefaultMetrics } from './prom'
 
-export const setUpProm = (
+export const setupProm = (
   app: Application,
   config?: Config
 ): ReturnType<typeof setInterval> => {

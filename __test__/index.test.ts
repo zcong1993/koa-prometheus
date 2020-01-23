@@ -1,7 +1,7 @@
 import * as Koa from 'koa'
 import * as supertest from 'supertest'
 import { register } from 'prom-client'
-import { setUpProm, Config, defaultStatusNormalizer } from '../src'
+import { setupProm, Config, defaultStatusNormalizer } from '../src'
 
 // https://github.com/visionmedia/supertest/issues/520
 afterAll((done: any) => setImmediate(done))
@@ -23,7 +23,7 @@ const setupRoute = (app: Koa, route: string) => {
 
 const createApp = (cfg?: Config) => {
   const app = new Koa()
-  setUpProm(app, cfg)
+  setupProm(app, cfg)
 
   setupRoute(app, '/')
   setupRoute(app, '/test')
@@ -81,7 +81,7 @@ it('custom config should work well', async () => {
   clear()
 })
 
-it.only('statusNormalizer should work well', async () => {
+it('statusNormalizer should work well', async () => {
   const config: Config = {
     statusNormalizer: ctx => {
       if (
