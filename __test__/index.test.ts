@@ -45,11 +45,18 @@ it('default config should work well', async () => {
   const app = createApp()
   const { request, server } = createRequest(app)
 
+  await request.get('/')
+  await request.get('/?status=300')
+  await request.get('/?status=400')
+
   const res = await request.get('/metrics')
   expect(res.status).toBe(200)
   // test collect default metrics
   expect(res.text).toMatch(/process_cpu_user_seconds_total/)
   expect(res.text).toMatch(/TYPE http_request_duration_ms histogram/)
+  expect(res.text).toMatch(/normalizedStatus="2xx"/)
+  expect(res.text).toMatch(/normalizedStatus="3xx"/)
+  expect(res.text).toMatch(/normalizedStatus="4xx"/)
   server.close()
   clear()
 })
