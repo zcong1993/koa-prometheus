@@ -16,11 +16,7 @@ $ npm i @zcong/koa-prometheus --save
 
 ```ts
 import * as Koa from 'koa'
-import {
-  setupProm,
-  Config,
-  defaultStatusNormalizer
-} from '@zcong/koa-prometheus'
+import { setupProm } from '@zcong/koa-prometheus'
 
 const app = new Koa()
 
@@ -45,7 +41,7 @@ setupProm(app, {
 | collectDefaultMetrics       | if collect default metrics                  | true                                                                                   | false            |
 | defaultLabels               | global labels                               | {}                                                                                     | { app: 'myApp' } |
 | statusNormalizer            | func for normalizing status code            | [config.ts](https://github.com/zcong1993/koa-prometheus/blob/master/src/config.ts#L16) |                  |
-| requestDurationUseHistogram | if requestDuration use Histogram of Summary | true                                                                                   | false            |
+| requestDurationUseHistogram | if requestDuration use Histogram or Summary | true                                                                                   | false            |
 
 ## License
 
