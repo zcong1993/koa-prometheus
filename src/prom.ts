@@ -38,6 +38,6 @@ export const createMetricsHandler: () => (ctx: any) => Promise<void> = () => {
   }
 }
 
-export const setupDefaultMetrics = (): ReturnType<typeof setInterval> => {
+export const setupDefaultMetrics = () => {
   return collectDefaultMetrics()
 }
