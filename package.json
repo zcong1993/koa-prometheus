@@ -32,7 +32,7 @@
     "prettier": "^1.19.1",
     "supertest": "^4.0.2",
     "ts-jest": "^25.0.0",
-    "tslint": "^5.20.1",
+    "tslint": "^6.0.0",
     "tslint-config-airbnb": "^5.11.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.5"
