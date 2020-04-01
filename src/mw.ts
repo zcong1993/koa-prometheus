@@ -27,15 +27,17 @@ export const promMw = (c: Config) => {
       const { method, status, _matchedRoute } = ctx
       const route = _matchedRoute || '__no_matched'
 
-      const labels: Record<string, string> = {
-        route,
-        method,
-        status,
-        normalizedStatus: c.statusNormalizer(ctx)
-      }
+      if (typeof c.routeFilter === 'function' && c.routeFilter(route)) {
+        const labels: Record<string, string> = {
+          route,
+          method,
+          status,
+          normalizedStatus: c.statusNormalizer(ctx)
+        }
 
-      requestCounter.inc(labels, 1)
-      requestDurationSummary.observe(labels, dur)
+        requestCounter.inc(labels, 1)
+        requestDurationSummary.observe(labels, dur)
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ export type Status = '2xx' | '3xx' | '4xx' | '5xx'
 
 export type RouteNormalizer = (route: string) => string
 export type StatusNormalizer = <T extends Context = Context>(ctx: T) => Status
+export type RouteFilter = (route: string) => boolean
 
 export interface Config {
   metricsPath?: string
@@ -11,6 +12,7 @@ export interface Config {
   defaultLabels?: Record<string, string>
   statusNormalizer?: StatusNormalizer
   requestDurationUseHistogram?: boolean
+  routeFilter?: RouteFilter
 }
 
 export const defaultStatusNormalizer: StatusNormalizer = ctx => {
@@ -35,7 +37,8 @@ export const defaultConfig: Config = {
   metricsPath: '/metrics',
   collectDefaultMetrics: true,
   statusNormalizer: defaultStatusNormalizer,
-  requestDurationUseHistogram: true
+  requestDurationUseHistogram: true,
+  routeFilter: (_: string) => true
 }
 
 export const mergeDefault = (c?: Config): Config => {
