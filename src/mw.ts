@@ -27,7 +27,11 @@ export const promMw = (c: Config) => {
       const { method, status, _matchedRoute } = ctx
       const route = _matchedRoute || '__no_matched'
 
-      if (typeof c.routeFilter === 'function' && c.routeFilter(route)) {
+      if (
+        typeof c.routeFilter === 'function' &&
+        c.routeFilter(route) &&
+        route !== '__no_matched'
+      ) {
         const labels: Record<string, string> = {
           route,
           method,
