@@ -15,7 +15,7 @@ export interface Config {
   routeFilter?: RouteFilter
 }
 
-export const defaultStatusNormalizer: StatusNormalizer = ctx => {
+export const defaultStatusNormalizer: StatusNormalizer = (ctx) => {
   const status = ctx.status
 
   if (status >= 200 && status < 300) {
@@ -38,12 +38,12 @@ export const defaultConfig: Config = {
   collectDefaultMetrics: true,
   statusNormalizer: defaultStatusNormalizer,
   requestDurationUseHistogram: true,
-  routeFilter: (_: string) => true
+  routeFilter: (_: string) => true,
 }
 
 export const mergeDefault = (c?: Config): Config => {
   return {
     ...defaultConfig,
-    ...c
+    ...c,
   }
 }

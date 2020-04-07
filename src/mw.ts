@@ -36,7 +36,7 @@ export const promMw = (c: Config) => {
           route,
           method,
           status,
-          normalizedStatus: c.statusNormalizer(ctx)
+          normalizedStatus: c.statusNormalizer(ctx),
         }
 
         requestCounter.inc(labels, 1)

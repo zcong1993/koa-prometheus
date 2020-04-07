@@ -1,4 +1,5 @@
 import * as Koa from 'koa'
+import * as Router from 'koa-router'
 import * as supertest from 'supertest'
 import { register } from 'prom-client'
 import { setupProm, Config, defaultStatusNormalizer } from '../src'
@@ -6,27 +7,32 @@ import { setupProm, Config, defaultStatusNormalizer } from '../src'
 // https://github.com/visionmedia/supertest/issues/520
 afterAll((done: any) => setImmediate(done))
 
-const setupRoute = (app: Koa, route: string) => {
-  app.use(async (ctx, next) => {
-    if (ctx.path !== route) {
-      await next()
-      return
-    }
-
-    ctx.status = (ctx.query.status && parseInt(ctx.query.status)) || 200
-    ctx.body = {
-      code: ctx.query.code || 0,
-      data: 'test'
-    }
-  })
-}
+const sleep = (n: number) => new Promise((r) => setTimeout(r, n))
 
 const createApp = (cfg?: Config) => {
   const app = new Koa()
   setupProm(app, cfg)
 
-  setupRoute(app, '/')
-  setupRoute(app, '/test')
+  const r = new Router()
+
+  r.get('/', (ctx) => {
+    ctx.status = (ctx.query.status && parseInt(ctx.query.status)) || 200
+    ctx.body = {
+      code: ctx.query.code || 0,
+      data: 'test',
+    }
+  })
+
+  r.get('/test', (ctx) => {
+    ctx.status = (ctx.query.status && parseInt(ctx.query.status)) || 200
+    ctx.body = {
+      code: ctx.query.code || 0,
+      data: 'test',
+    }
+  })
+
+  app.use(r.routes())
+  app.use(r.allowedMethods())
 
   return app
 }
@@ -37,7 +43,7 @@ const createRequest = (app: ReturnType<typeof createApp>) => {
   const server = app.listen()
   return {
     request: supertest(server),
-    server
+    server,
   }
 }
 
@@ -48,6 +54,8 @@ it('default config should work well', async () => {
   await request.get('/')
   await request.get('/?status=300')
   await request.get('/?status=400')
+
+  // await sleep(4000)
 
   const res = await request.get('/metrics')
   expect(res.status).toBe(200)
@@ -67,8 +75,8 @@ it('custom config should work well', async () => {
     collectDefaultMetrics: false,
     requestDurationUseHistogram: false,
     defaultLabels: {
-      app: 'test'
-    }
+      app: 'test',
+    },
   }
 
   const app = createApp(config)
@@ -90,7 +98,7 @@ it('custom config should work well', async () => {
 
 it('statusNormalizer should work well', async () => {
   const config: Config = {
-    statusNormalizer: ctx => {
+    statusNormalizer: (ctx) => {
       if (
         ctx.status === 200 &&
         typeof ctx.body === 'object' &&
@@ -99,7 +107,7 @@ it('statusNormalizer should work well', async () => {
         return ctx.body.code === 0 ? '2xx' : '4xx'
       }
       return defaultStatusNormalizer(ctx)
-    }
+    },
   }
 
   const app = createApp(config)
